@@ -1,0 +1,12 @@
+tensorflow==2.15.1
+transformers>=4.38,<5
+scikit-learn>=1.4
+pandas>=2.2
+numpy<2 
+matplotlib
+seaborn
+tqdm
+liac-arff
+jupyterlab
+ipykernel
+pytest

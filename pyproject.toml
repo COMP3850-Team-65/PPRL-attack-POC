@@ -1,0 +1,9 @@
+[project]
+name = "pprl-attack-poc"
+version = "0.1.0"
+requires-python = ">=3.11,<3.12"
+authors = [{ name = "TygerByte Technologies" }]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
