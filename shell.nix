@@ -21,13 +21,19 @@ pkgs.mkShell {
   shellHook = ''
     export PYTHONPATH=$PWD:$PYTHONPATH
 
+    # Detect stale/broken venvs
+    if [ -d .venv ] && ! .venv/bin/python --version >/dev/null 2>&1; then
+      echo ">> Stale .venv detected (broken interpreter) — recreating"
+      rm -rf .venv
+    fi
+
     if [ ! -d .venv ]; then
       echo ">> Creating .venv (Python 3.11)"
       uv venv .venv --python ${pkgs.python311}/bin/python3.11
     fi
     source .venv/bin/activate
 
-    if [ requirements.txt -nt .venv/.synced ] 2>/dev/null || [ ! -f .venv/.synced ]; then
+    if [ ! -f .venv/.synced ] || [ requirements.txt -nt .venv/.synced ]; then
       echo ">> Syncing dependencies from requirements.txt"
       uv pip install -r requirements.txt
       touch .venv/.synced
