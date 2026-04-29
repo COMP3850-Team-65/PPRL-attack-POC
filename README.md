@@ -27,3 +27,16 @@ python3.11 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+## Attack
+
+The attack is split across 4 notebooks that must be run in order:
+
+- `00_baseline_snn_mlp.ipynb` - trains the target SNN+MLP on the full dataset
+- `01_shadow_snn_mlp.ipynb` - trains the shadow model (same architecture, disjoint data)
+- `02_mia_feature_extraction.ipynb` - scores all pairs through both models and extracts `prob` + `loss` features
+- `03a_mia_attack.ipynb` - trains the attack classifier and evaluates its results
+
+`00` and `01` are functionally identical, the only difference is which data split they train on. The shadow model acts as a proxy for the target: the attacker trains their classifier on shadow features (where membership labels are known) and evaluates it against the target (where they aren't).
+
+A fifth notebook `03b_mia_attack_encoder_distance.ipynb` is planned for Stage 2, adding encoder distance as a third attack feature to hopefully improve results.
