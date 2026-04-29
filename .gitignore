@@ -9,6 +9,7 @@ result
 .direnv/
 
 data/
-*.npy
+outputs/models/
+
 
 .DS_Store

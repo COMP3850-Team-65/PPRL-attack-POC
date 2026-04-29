@@ -12,3 +12,4 @@ jupyter_server
 notebook
 ipykernel
 pytest
+nbstripout

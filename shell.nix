@@ -39,6 +39,11 @@ pkgs.mkShell {
       touch .venv/.synced
     fi
 
+    if [ -d .git ] && ! grep -q "nbstripout" .git/config 2>/dev/null; then
+      echo ">> Installing nbstripout git hook"
+      .venv/bin/nbstripout --install
+    fi
+
     echo ""
     echo "pprl-attack-poc dev shell ready."
     echo "  python : $(python --version)"
