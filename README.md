@@ -1,38 +1,29 @@
-# Results
+# pprl-attack-poc
 
-## Stage 1: probability + loss features (2026-04-24)
+Proof-of-concept Membership Inference Attack (MIA) against a Privacy-Preserving Record Linkage (PPRL) model.
 
-Logistic regression attack classifier on 2 features (prob, loss). Trained on shadow features, evaluated on target.
+## What this is
 
-**Models**
+A linkage model takes pairs of clinical notes and predicts whether they describe the same patient. This is a useful tool for hospitals but raises a privacy question: can an attacker tell whether a specific record was used to train the model? This project demonstrates a working attack that answers that question with above-chance accuracy.
 
-| Model | Train acc | Test acc | Gap |
-|---|---|---|---|
-| Target | 0.789 | 0.753 | +0.036 |
-| Shadow | 0.736 | 0.718 | +0.018 |
+The attack follows the standard Shokri et al. shadow-model approach. We train a target model (the victim), train an architecturally-identical shadow model on disjoint data (the attacker's stand-in), use the shadow's known membership labels to teach an attack classifier what "trained on" looks like, and apply that classifier to the target.
 
-**Attack**
+## Setup
 
-| Metric | Value |
-|---|---|
-| Accuracy | 0.673 |
-| AUC | 0.522 |
-| TPR @ FPR=1% | 0.010 |
-| TPR @ FPR=10% | 0.104 |
+### NixOS (recommended)
 
-AUC barely above random. Small generalisation gap leaves little signal for the attack to extract. The linkage model resists naive black-box MIA.
+```bash
+nix-shell
+```
 
-![Stage 1 ROC](outputs/figures/mia_roc_curve.png)
+`shell.nix` creates a Python 3.11 venv at `.venv/`, syncs `requirements.txt`, and exports `LD_LIBRARY_PATH` so compiled extensions (zmq, TensorFlow) load correctly.
 
----
+VSCode needs the same environment to launch Jupyter cells. Either launch VSCodium from inside `nix-shell` or set up `direnv` with `nix-direnv` so the environment loads automatically when entering the directory.
 
-## Stage 2 plan: add encoder distance
+### Other systems
 
-Add `enc_dist = ||encoder(x1) - encoder(x2)||_2` as a third feature. Pairs seen during training may sit at characteristically different latent distances than unseen pairs.
-
-Steps:
-1. Extend `score_pairs` in notebook 02 to return encoder distance.
-2. Add `enc_dist` column to both feature CSVs.
-3. Set `features = ["prob", "loss", "enc_dist"]` in notebook 03.
-
-Threat model shifts from pure black-box to encoder-accessible. Expected AUC: 0.54–0.58.
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
