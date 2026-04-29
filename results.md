@@ -20,19 +20,18 @@ Logistic regression attack classifier on 2 features (prob, loss). Trained on sha
 | TPR @ FPR=1% | 0.010 |
 | TPR @ FPR=10% | 0.104 |
 
-AUC barely above random. Small generalisation gap leaves little signal for the attack to extract. The linkage model resists naive black-box MIA.
+AUC barely above random. Small generalisation gap leaves little signal for the attack to extract.
 
 ![Stage 1 ROC](outputs/figures/mia_roc_curve.png)
 
 ---
 
-## Stage 2 plan: add encoder distance
+## Stage 2: TODO
 
-Add `enc_dist = ||encoder(x1) - encoder(x2)||_2` as a third feature. Pairs seen during training may sit at characteristically different latent distances than unseen pairs.
+encoder distance as a third feature. Pairs seen during training may sit at characteristically different latent distances than unseen pairs.
 
-Steps:
 1. Extend `score_pairs` in notebook 02 to return encoder distance.
 2. Add `enc_dist` column to both feature CSVs.
 3. Set `features = ["prob", "loss", "enc_dist"]` in notebook 03.
 
-Threat model shifts from pure black-box to encoder-accessible. Expected AUC: 0.54–0.58.
+Threat model shifts from pure black-box to encoder-accessible.

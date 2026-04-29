@@ -1,0 +1,2 @@
+attack_accuracy,attack_auc,tpr_at_fpr_1pct,tpr_at_fpr_10pct,coef_prob,coef_loss
+0.673325,0.5223180859375,0.01034375,0.1044375,-0.13246026596425686,-0.12668911381631398
