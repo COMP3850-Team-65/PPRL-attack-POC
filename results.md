@@ -1,6 +1,6 @@
 # Results
 
-## Stage 1: probability + loss features (2026-04-24)
+## Stage 1: probability + loss features
 
 Logistic regression attack classifier on 2 features (prob, loss). Trained on shadow features, evaluated on target.
 
