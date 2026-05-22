@@ -1,15 +1,20 @@
+# Python virtual environment
 .venv/
 __pycache__/
 *.py[cod]
 *.egg-info/
 
+# Jupyter
 .ipynb_checkpoints/
 
-result
+# Nix / direnv
 .direnv/
 
+# Large data files and trained models (not committed)
 data/
 outputs/models/
+outputs/results/
+outputs/figures/
 
-
+# OS files
 .DS_Store

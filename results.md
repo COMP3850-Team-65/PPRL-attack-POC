@@ -1,8 +1,8 @@
 # Results
 
-## Stage 1: probability + loss features
+## Phase 1: Legacy (autoencoder, single shadow)
 
-Logistic regression attack classifier on 2 features (prob, loss). Trained on shadow features, evaluated on target.
+Initial approach using an autoencoder-based architecture with a single shadow model. Target and shadow used different encoder architectures, which limited the transfer of membership signal.
 
 **Models**
 
@@ -20,18 +20,54 @@ Logistic regression attack classifier on 2 features (prob, loss). Trained on sha
 | TPR @ FPR=1% | 0.010 |
 | TPR @ FPR=10% | 0.104 |
 
-AUC barely above random. Small generalisation gap leaves little signal for the attack to extract.
-
-![Stage 1 ROC](outputs/figures/mia_roc_curve.png)
+![Phase 1 ROC](outputs/figures/mia_roc_phase1.png)
 
 ---
 
-## Stage 2: TODO
+## What changed (Phase 1 -> Phase 2)
 
-encoder distance as a third feature. Pairs seen during training may sit at characteristically different latent distances than unseen pairs.
+- Unified target/shadow encoder architecture (identical Siamese network)
+- Switched from autoencoder to contrastive loss (margin=0.5)
+- Multi-shadow bootstrap sampling (10 shadows, N=1 with replacement)
+- Disjoint per-shadow test folds via StratifiedKFold
+- Extended attack to 5 features (added `prob_correct`, `entropy`)
+- Hyperparameter-tuned attack classifier (GridSearchCV + balanced class weights)
 
-1. Extend `score_pairs` in notebook 02 to return encoder distance.
-2. Add `enc_dist` column to both feature CSVs.
-3. Set `features = ["prob", "loss", "enc_dist"]` in notebook 03.
+---
 
-Threat model shifts from pure black-box to encoder-accessible.
+## Phase 2: Siamese encoder + 10-shadow bootstrap
+
+Target and shadow models share an identical architecture trained on pre-computed ClinicalBERT embeddings with disjoint per-shadow test folds.
+
+**Pipeline config**
+
+| Parameter | Target | Shadows |
+|---|---|---|
+| Encoder | `Input(768)->Dense(256)->LeakyReLU->Dense(128)` | Identical |
+| Contrastive margin | 0.5 | 0.5 |
+| Encoder epochs | 200 | 200 |
+| Classifier | `Dense(128)->Dense(64)->Dense(1)` on \|enc1–enc2\| | Identical |
+| Classifier epochs | 100 | 100 |
+| Batch size | 64 | 64 |
+| Shadow sampling | — | Stratified bootstrap, N=10 |
+
+**Linkage model performance**
+
+| Model | Test accuracy |
+|---|---|
+| target | 0.747 |
+| shadow_0–shadow_9 | 0.665–0.755 |
+| **Shadow mean** | **0.700** |
+
+**Attack performance**
+
+| Metric | Value |
+|---|---|
+| AUC | 0.637 |
+| 95% CI | [0.630, 0.645] |
+| TPR @ FPR=1% | 0.017 |
+| TPR @ FPR=10% | 0.171 |
+
+AUC of 0.637 is 13.7 points above random baseline with tight confidence intervals. Within-model MIA on the target stays at 0.515, suggesting the shadow-model transfer extracts a membership signal the target doesn't exhibit internally.
+
+![Phase 2 ROC](outputs/figures/mia_roc_phase2.png)
