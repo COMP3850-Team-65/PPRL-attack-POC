@@ -1,0 +1,24 @@
+Run 001
+Notebook: 00_train_models
+Date: 2026-05-23 13:26:47
+Git: 4de3ae9
+
+target_train_pairs: 32000
+target_test_pairs: 8000
+shadow_train_pairs: 32000
+shadow_test_pairs: 8000
+n_shadows: 10
+sa_epochs: 200
+clf_epochs: 100
+batch_size: 64
+margin: 0.5
+target_train_acc: 0.885
+target_test_acc: 0.7049
+target_gap: 0.1801
+shadow_mean_train_acc: 0.96
+shadow_mean_test_acc: 0.703
+shadow_min_test_acc: 0.6725
+shadow_max_test_acc: 0.7225
+shadow_std_test_acc: 0.0154
+shadow_mean_gap: 0.257
+total_time_s: 1769

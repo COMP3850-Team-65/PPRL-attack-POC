@@ -1,0 +1,21 @@
+Run 002
+Notebook: 01_attack
+Date: 2026-05-23 14:03:25
+Git: 4de3ae9
+
+shadow_rows: 328000
+target_rows: 40000
+n_features: 5
+feature_names: prob, loss, correctness_confidence, entropy, prob_correct
+best_C: 100
+cv_score: 0.6643
+attack_auc: 0.6276
+auc_ci_95: [0.6202, 0.6349]
+bootstrap_n: 1000
+tpr_at_fpr_1pct: 0.0144
+tpr_at_fpr_10pct: 0.1503
+attack_accuracy: 0.7348
+majority_class_baseline: 0.8
+within_model_auc: 0.6309
+confusion_matrix: tn=2703 fp=5297 fn=5310 tp=26690
+lr_coefficients: prob=-0.0712, loss=-0.0282, correctness_confidence=+3.5579, entropy=+2.2809, prob_correct=+3.1207
